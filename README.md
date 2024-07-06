@@ -46,7 +46,7 @@ The catalog entries' status can be changed or deleted as a whole
         5. <s>Anitcipate that if may pose a problem to not re-display todo catalogs right after deletion
             (may result in edit not falling into right index) -> can be a solution to this is find first the index
             at which the current is on before editting the object/index</s>
-    - put border (left only or whole box of catalog) depending on priority (OPTIONAL)
+    - <s>put border (left only or whole box of catalog) depending on priority</s>
 2. Project tab
     - <s>If project is created the title will be created as an LI under UL with class projects under the PROJECT LI tag</s>
 3. Notes tab
