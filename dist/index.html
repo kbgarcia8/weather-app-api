@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TO-DO Webpage</title>
+    <link rel="stylesheet" href="reset.css"> <!--applying reset-->
+    <link rel="stylesheet" href="default_style.css"> <!--applying default style-->
+    <link rel="stylesheet" href="style.css"> <!--applying style to be used-->
+  <script defer src="main.js"></script></head>
+  <body>
+    <dialog class="create-todo-popup" id="create-task">
+      <form id="create-task-dialog">
+        <div class="create-new">
+          <div class="create-new-header">
+            <p>CREATE NEW</p>
+          </div>
+          <div class="create-new-body">
+            <nav class="create-new-navigation">
+              <ul class="panel">
+                <li class="create-new-menu" id="create-new-selection1">TO-DO</li>
+                <li class="create-new-menu" id="create-new-selection2">PROJECT</li>
+                <li class="create-new-menu" id="create-new-selection3">NOTE</li>
+              </ul>
+            </nav>
+          </div>
+          <div class="create-new-panel">
+            <!--changes via navigation button pressed at dialog-->
+          </div>
+        </div>
+      </form>
+    </dialog>
+    <div class="workspace">
+      <div class="workspace-header">
+        <img src="./images/note-icon.svg" alt="note-icon">
+        <p>TO-DO LIST</p>
+      </div>
+      <div class="workspace-body">
+        <nav class="main-panel-navigation">
+          <ul class="panel">
+            <li class="main-panel-menu" id="main-panel-selection1">MY HOME</li>
+            <li class="main-panel-menu" id="main-panel-selection2">TODAY</li>
+            <li class="main-panel-menu" id="main-panel-selection3">WEEK</li>
+            <li class="main-panel-menu" id="main-panel-selection6">OVERDUE</li>
+            <li class="main-panel-menu" id="main-panel-selection7">GENERAL</li>
+            <li class="main-panel-menu" id="main-panel-selection4">MY NOTES</li>
+            <li class="main-panel-menu-projects" id="main-panel-selection5" style="flex-direction: column; align-items: center;">PROJECTS
+              <ul class="projects">
+                <!--project tabs with respect to keys of mainTodos object-->
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <button class="generator" id="adder">+</button>
+        <div class="workspace-panel" id="main-panel">
+          <!--changes via navigation button pressed at main panel-->
+          <!--details popup for todo entry-->
+          <!--edit dialog popup for todo entry-->
+          <!--notes will appear here-->
+        </div>
+      </div>
+    </div>
+  <script src="index.js"></script>
+	<!--<script src="scratch.js"></script>-->
+  </body>
+</html>

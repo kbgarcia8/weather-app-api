@@ -1,0 +1,68 @@
+Reference: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#feature-detecting_localstorage
+Additional: https://blog.openreplay.com/how-to-read-and-write-json-in-javascript/
+
+TO CHECK:
+a. Revisit yung JSON Activity to check if how to use setItem() and getItem if sobrang array of array yung object OR i-access na siya hierarchal nalang (top.sub.sub)
+b. Where and how to view the .json or Object "file" created in local storage
+
+
+Basic concepts
+1. Access and create
+-Storage.getItem() and Storage.setItem() methods
+-It's recommended to use the Web Storage API (setItem, getItem, removeItem, key, length)
+
+localStorage.colorSetting = "#a4509b";
+localStorage["colorSetting"] = "#a4509b";
+localStorage.setItem("colorSetting", "#a4509b");
+
+2. Two mechanisms of Web Storage:
+-sessionStorage maintains a separate storage area for each given origin that's available for the duration of the page session (as long as the browser is open, including page reloads and restores).
+-localStorage does the same thing, but persists even when the browser is closed and reopened
+
+These mechanisms are manipulated in same way but are different objects
+
+3. Testing for availability (Browser-dependent)
+See storage_checker.js on HTML_CSS_JS repository
+
+4. Example of getItem() and setItem()
+https://github.com/mdn/dom-examples/blob/main/web-storage/main.js
+
+Example in code:
+// Create an object
+const userData = {
+  job: "Programmer",
+  skills: [
+    { id: 4200, name: "Angular" },
+    { id: 3000, name: "React" },
+    { id: 8080, name: "Vue" },
+  ],
+};
+// Store the object into storage
+localStorage.setItem("userData", JSON.stringify(userData))
+
+// Retrieve the object from the storage
+const data = localStorage.getItem("userData");
+console.log("data: ", JSON.parse(data));
+
+Note: 
+-There is also a *.onchange handler which detects if value is changed (may come in handy in dropdownds, inputs, etc)
+-Only support strings so use JSON.stringify(<var>) when storing and JSON.parse("<var/object>") to be sure
+
+5. Responding to storage changes with StorageEvent (like EventListener)
+window.addEventListener("storage", (e) => {
+  document.querySelector(".my-key").textContent = e.key;
+  document.querySelector(".my-old").textContent = e.oldValue;
+  document.querySelector(".my-new").textContent = e.newValue;
+  document.querySelector(".my-url").textContent = e.url;
+  document.querySelector(".my-storage").textContent = JSON.stringify(
+    e.storageArea,
+  );
+});
+
+6. Deleting data records
+-Storage.removeItem() takes a single argument — the key of the data item you want to remove — and removes it from the storage object for that domain
+-Storage.clear() takes no arguments, and empties the entire storage object for that domain.
+
+7. You can inspect data you saved in localStorage using DevTools! 
+To do this, open the Application tab in DevTools and click on the Local Storage tab under Storage. 
+Every time you add, update and delete data from localStorage in your app, those changes will be reflected in DevTools
