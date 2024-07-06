@@ -1,0 +1,764 @@
+/* Try to add @media to accomodate min and max dimensions of different devices
+once understood */
+/*Fonts*/
+@font-face {
+  font-family: Macqueen; 
+  src: url('../fonts/Macqueen.ttf') format('truetype'); 
+}
+@font-face {
+  font-family: Transistor; 
+  src: url('../fonts/Transistor.ttf') format('truetype'); 
+}
+@font-face {
+  font-family: Coffeemood; 
+  src: url('../fonts/Coffeemood.ttf') format('truetype'); 
+}
+body {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/background.svg");
+    background-size: cover;
+    background-repeat: no-repeat;    
+    opacity: 0.75;
+}
+
+.workspace, .create-new {
+    width: 70vw;
+    height: 85vh;
+    background-color: #dddddd;
+    box-shadow: 0 5vh 5vw rgba(0, 0, 0, 0.75); 
+    z-index: 1; /* to avoid being blended in the background*/
+    display: flex;
+    flex-wrap: wrap;
+}
+.edit-todo {
+  width: 50vw;
+  height: 75vh;
+  background-color: #dddddd;
+  z-index: 1; /* to avoid being blended in the background*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+.workspace-header, .create-new-header, .edit-todo-header, .edit-note-header {
+    border: 2px solid white;
+    background-color: #777777;
+    flex-basis: 100%;
+    display: flex;
+    align-items: center;
+    height: 20%;
+}
+.edit-todo-header {
+  width: 100%;
+}
+.workspace-header>p, .create-new-header>p, .edit-todo-header>p, .edit-note-header>p{
+    color: whitesmoke;
+    font-weight: 900;
+    font-size: 4vh;
+    font-family: Coffeemood, Arial, Helvetica, sans-serif;
+    -webkit-text-stroke: 1px black;
+}
+.create-new-header>p, .edit-todo-header>p, .edit-note-header>p{
+  padding-left: 1.5vw;
+}
+.workspace-header>img{
+    width: 5.5vw;
+    height: 5.5vh;
+}
+.workspace-body, .create-new-body {
+    display: flex;
+}
+.workspace-body>nav, .create-new-body>nav {
+    padding-top: 4%;
+    display: flex;
+    justify-content: center;
+    background-color: rgb(143, 143, 146);
+    color: #dddddd;
+    height: 68vh;
+    width: 15vw;
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.main-panel-menu, .main-panel-menu-active,
+.create-new-menu, .create-new-menu-active,
+.main-panel-menu-projects,
+.main-panel-menu-projects-item, .main-panel-menu-projects-item-active {
+    margin-bottom: 2vh;
+    display: flex;
+    justify-content: center;
+    font-size: 3vh;
+    font-family: Coffeemood, Arial, Helvetica, sans-serif;
+    cursor: pointer; 
+    transition: 0.4s all ease;
+    color: white;
+    position: relative; /*Ensure position of pseudo-element*/
+}
+/* For hover effects sequence is :hover to set transition, ::after inserts
+the properties after your element after the hover happens, :hover::after to 
+set what happens as the hover happens */
+.main-panel-menu:hover,
+.create-new-menu:hover,
+.main-panel-menu-projects-item:hover {
+    transition: 0.4s all ease;
+}
+.main-panel-menu::after,
+.create-new-menu::after,
+.main-panel-menu-projects-item::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0); /* Hide the element initially horizontally */
+    height: 10%;
+    top: 100%;
+    left: 0;
+    background-color: #00564d;
+    transform-origin: bottom left;
+    transition: transform 0.5s ease-out;
+}
+.main-panel-menu:hover::after,
+.create-new-menu:hover::after,
+.main-panel-menu-projects-item:hover::after,
+.main-panel-menu-projects-item-active:hover::after { 
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+.main-panel-menu-active::after,
+.create-new-menu-active::after,
+.main-panel-menu-projects-item-active::after {/*another class that will be substitute to the original once clicked and vice versa*/
+    /*Will have to reset and use if else on a function to give this class to the only clicked navigation*/
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(1); /* Hide the element initially horizontally */
+    height: 10%;
+    top: 100%;
+    left: 0;
+    background-color: #00564d;
+    transform-origin: bottom left;
+    transition: transform 0.5s ease-out;
+}
+.projects {
+  display: block;
+  overflow: auto;
+  height: 70%;
+}
+.main-panel-menu-projects-item {
+  margin-bottom: 0.25vh;
+  font-size: 2vh;
+  position: relative;
+  display: block;
+  max-width: 20ch;
+}
+.workspace-panel {
+    height: 68vh;
+    width: 55vw;
+    /*border: 2px solid red;*/
+    display: flex;
+    position: relative;
+    right: 4vw;
+    row-gap: 1vh;
+}
+/* Custom scrollbar for WebKit browsers (Chrome, Safari) */
+.workspace-panel::-webkit-scrollbar,
+.todo-create-new-description::-webkit-scrollbar,
+.todo-edit-description::-webkit-scrollbar,
+.note-create-new-description::-webkit-scrollbar,
+.note-edit-description::-webkit-scrollbar,
+.projects::-webkit-scrollbar {
+  width: 12px;
+}
+.workspace-panel::-webkit-scrollbar-track,
+.todo-create-new-description::-webkit-scrollbar-track,
+.todo-edit-description::-webkit-scrollbar-track,
+.note-create-new-description::-webkit-scrollbar-track,
+.note-edit-description::-webkit-scrollbar-track,
+.projects::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.workspace-panel::-webkit-scrollbar-thumb,
+.todo-create-new-description::-webkit-scrollbar-thumb,
+.todo-edit-description::-webkit-scrollbar-thumb,
+.note-create-new-description::-webkit-scrollbar-thumb,
+.note-edit-description::-webkit-scrollbar-thumb,
+.projects::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+}
+.workspace-panel::-webkit-scrollbar-thumb:hover,
+.todo-create-new-description::-webkit-scrollbar-thumb:hover,
+.todo-edit-description::-webkit-scrollbar-thumb:hover,
+.note-create-new-description::-webkit-scrollbar-thumb:hover,
+.note-edit-description::-webkit-scrollbar-thumb:hover,
+.projects::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/* Custom scrollbar for Firefox */
+.workspace-panel,
+.todo-create-new-description,
+.todo-edit-description,
+.note-create-new-description,
+.note-edit-description,
+.projects {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+/* Custom scrollbar for Edge, IE, and modern browsers */
+.workspace-panel,
+.todo-create-new-description,
+.todo-edit-description,
+.note-create-new-description,
+.note-edit-description,
+.projects {
+    overflow: auto;
+}
+.workspace-panel::-ms-scrollbar,
+.todo-create-new-description::-ms-scrollbar,
+.todo-edit-description::-ms-scrollbar,
+.note-create-new-description::-ms-scrollbar,
+.note-edit-description::-ms-scrollbar,
+.projects::-ms-scrollbar {
+    width: 12px;
+}
+.workspace-panel::-ms-scrollbar-track,
+.todo-create-new-description::-ms-scrollbar-track,
+.todo-edit-description::-ms-scrollbar-track,
+.note-create-new-description::-ms-scrollbar-track,
+.note-edit-description::-ms-scrollbar-track,
+.projects::-ms-scrollbar-track {
+    background: #f1f1f1;
+}
+.workspace-panel::-ms-scrollbar-thumb,
+.todo-create-new-description::-ms-scrollbar-thumb,
+.todo-edit-description::-ms-scrollbar-thumb,
+.note-create-new-description::-ms-scrollbar-thumb,
+.note-edit-description::-ms-scrollbar-thumb,
+.projects::-ms-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+}
+.todo-catalog {
+  padding: 1.5%;
+  background-color: #cccccc;
+  box-shadow: 0 1vh 1vw rgba(0, 0, 0, 0.25);
+  display: flex;
+}
+/*styles for workspace here*/
+.generator, .cancel, .todo-creator, .project-creator, .note-creator, .todo-editor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 4vw;
+    height: 8vh;
+    position: relative;
+    top: 55vh;
+    right: 8vw;
+    font-size: 3rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    border: 2px solid #5e5c5c;
+    box-shadow: 0 2vh 0.75vw rgba(0, 0, 0, 0.5); 
+}
+.generator:focus, .cancel:focus, .todo-creator:focus, .project-creator:focus, .note-creator:focus, .todo-editor:focus {
+    color: #10867b;
+    border: #00564d solid 3px;
+}
+.home-summary {
+    background-color: wheat;
+    border-radius: 10%;
+    width: 30vw;
+    height: 35vh;
+    box-shadow: 0 2vh 0.75vw rgba(0, 0, 0, 0.5); 
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    position: relative;
+    left: 10vw;
+    top: 10vh;
+    padding-inline: 5%;
+    padding-top: 3%;
+}
+.home-summary-title {
+    font-weight: 900;
+    font-size: 4vh;
+    text-decoration: underline;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.home-summary-texts {
+  font-size: 2.25vh;
+  position: relative;
+  top: 1vw;
+}
+.create-todo-popup::backdrop, .todo-catalog-view-details-popup::backdrop, .edit-todo-popup::backdrop, .edit-note-popup::backdrop {
+    background-color: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+.create-todo-popup, .todo-catalog-view-details-popup, .edit-todo-popup, .edit-note-popup {
+    border: none !important;
+    box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 2s ease-out;
+    animation: scale-out 1000ms forwards, fade-out 1000ms forwards;
+}
+.create-todo-popup[open], .edit-todo-popup[open], .todo-catalog-view-details-popup[open], .edit-note-popup[open] {
+    animation: scale-in 1000ms forwards, fade-in 1000ms forwards;
+}
+.create-todo-popup[open]::backdrop, .edit-todo-popup[open]::backdrop, .todo-catalog-view-details-popup[open]::backdrop, .edit-note-popup[open]::backdrop {
+    animation: fade-in 1000ms forwards;
+}
+@keyframes test {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+        display: block;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes scale-in {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+@keyframes scale-out {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        display: block;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.5);
+        display: none;
+    }
+}
+.create-new {
+    width: 60vw;
+    height: 75vh;
+}
+.create-new-body>nav {
+    height: 60vh;
+    width: 15vw;
+}
+.create-new-panel, .edit-todo-panel {
+    height: 60vh;
+    width: 45vw;
+    /*border: 2px solid red;*/
+    display: flex;
+    flex-wrap: wrap;
+    padding: 3.5%;
+}
+.edit-todo-panel {
+  height: 55vh;
+  padding-left: 10%;
+}
+.todo-text-input, .project-text-input, .note-text-input {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.todo-create-new-title,
+.todo-edit-title,
+.todo-create-new-description,
+.todo-edit-description,
+.project-create-new-title,
+.note-create-new-title,
+.note-create-new-description,
+.note-edit-title,
+.note-edit-description  {
+    width: 250%;
+    height: 50%;
+    flex-basis: 100%;
+    border: none;
+    background-color: transparent;
+    font-size: 2rem;
+    font-family: lato, sans-serif;
+    resize: none;
+    overflow-y: auto;
+  }
+  textarea::placeholder {
+    transform: translateY(30%);
+    font-size: 1.6rem;
+    color: #616161;
+  }
+  .todo-create-new-title:focus,
+  .todo-edit-title:focus,
+  .todo-create-new-description:focus,
+  .todo-edit-description:focus,
+  .project-create-new-title:focus,
+  .note-create-new-title:focus,
+  .note-create-new-description:focus,
+  .note-edit-title:focus,
+  .note-edit-description:focus {
+    outline: none;
+    border-bottom: 1px solid rgb(23, 82, 23);
+  }
+  .todo-date-and-prio-input,
+  .todo-edit-date-and-prio-input {
+    display: flex;
+    flex-direction: column;
+    /*border: 2px solid red;*/
+    width: 100%;
+    height: fit-content;
+    position: relative;
+    top: 8vh;
+  }
+  .todo-due-date-title,
+  .todo-edit-due-date-title, 
+  .todo-priority-title {
+    font-size: 1.6rem;
+    margin-block: 1rem;
+  }
+  .todo-due-date-input,
+  .todo-edit-due-date-input {
+    padding: 1rem 1rem;
+    border: 1px solid rgb(23, 82, 23);
+    border-radius: 5px;
+    color: rgb(23, 82, 23);
+    background-color: transparent;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .todo-due-date-input:focus,
+  .todo-edit-due-date-input:focus {
+    outline: none;
+  }
+  .priority-input-todo,
+  .priority-input-edit-todo {
+    display: flex;
+    align-items: center;
+    /*border: 2px solid red;*/
+    flex-basis: 20%;
+  }
+  input[type="radio"] {
+    position: relative;
+    left: 4rem;
+    height: 3rem;
+    width: 2rem;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+  }
+  .todo-priority-label-low, 
+  .todo-priority-label-mid, 
+  .todo-priority-label-high {
+    display: flex;
+    border-radius: 3px;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    align-items: center;
+    justify-content: center;
+    width: 6rem;
+    height: 3rem;
+  }
+  .todo-priority-label-low {
+    border: 2px solid rgb(0, 147, 196);
+    color: rgb(0, 147, 196);
+  }
+  .todo-priority-label-mid {
+    border: 2px solid rgb(226, 151, 11);
+    color: rgb(226, 151, 11);
+  }
+  .todo-priority-label-high {
+    border: 2px solid rgb(204, 29, 29);
+    color: rgb(204, 29, 29);
+  }
+  /* changes color when hovered for each priority */
+  .todo-priority-label-low:hover {
+    color: #ffff;
+    background-color: rgb(0, 147, 196);
+  }
+  .todo-priority-label-mid:hover {
+    color: #ffff;
+    background-color: rgb(226, 151, 11);
+  }
+  .todo-priority-label-high:hover {
+    color: #ffff;
+    background-color: rgb(204, 29, 29);
+  }
+  /* Style the label text when radio button is checked */
+  .todo-priority-low:checked + label {
+    font-weight: bold;
+    color: #ffff;
+    background-color: rgb(0, 147, 196);
+  }
+  .todo-priority-mid:checked + label {
+    font-weight: bold;
+    color: #ffff;
+    background-color: rgb(226, 151, 11);
+  }
+  .todo-priority-high:checked + label {
+    font-weight: bold;
+    color: #ffff;
+    background-color: rgb(204, 29, 29);
+  }
+  .todo-creator {
+    top: 1.25vh;
+    left: 35vw;
+  }
+  .todo-editor {
+    top: 1.25vh;
+    left: 38vw;
+  }
+  .todo-creator>img,
+  .project-creator>img,
+  .note-creator>img,
+  .todo-editor>img {
+    width: 3vw;
+    height: 4.5vh;
+  }
+  .project-creator {
+    top: 15vh;
+    left: 35vw;
+  }
+  .note-creator {
+    top: 15vh;
+    left: 35vw;
+  }
+  #cancel-create-todo {
+    color: #10867b;
+    top: -60vh;
+    left: 36vw;
+  }
+  #cancel-edit-todo {
+    color: #10867b;
+    top: -60.5vh;
+    left: 38vw;
+  }
+  #cancel-create-project {
+    color: #10867b;
+    top: -44vh;
+    left: 32vw;
+  }
+  #cancel-create-note {
+    color: #10867b;
+    top: -44vh;
+    left: 32vw;
+  }
+  .todo-catalog {
+    display: flex;
+    align-items: center;
+  }
+  .todo-catalog>* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .todo-catalog-title-default {
+    width: 70%;
+    padding-left: 1vw;
+    font-weight: 700;
+  }
+  .todo-catalog-title-checked {
+    width: 70%;
+    padding-left: 1vw;
+    font-weight: 700;
+    text-decoration: line-through;
+    text-decoration-thickness: 0.5vh;
+  }
+  .todo-catalog-view-details-btn, .close-todo-details-btn {
+    border-radius: 15%;
+    font-size: 1.5vh;
+    background-color: #47bdad;
+    color: #dddddd;
+    font-weight: 900;
+    padding: 0.25%;
+  }
+  .todo-catalog-due {
+    padding-inline: 1.25vw;
+    font-size: 1.75vh;
+    font-weight: 700;
+  }
+.details-panel {
+    display: inline-block;
+    flex-direction: column;
+    padding: 1vw;
+    width: minmax(40vw, 80vw);
+    height: minmax(20vh, 40vh);
+    overflow-wrap: break-word;
+    /*overflow-y: auto; fix to not cause dangling space*/
+    border: 5px solid rgb(23, 82, 23); 
+}
+.details-panel>p {
+  text-align: left;
+  display: inline;
+  line-height: 1.5;
+}
+.details-panel-title {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 3.5vh;
+  font-weight: 900;
+  width: 100%;
+}
+.details-panel-label {
+  font-weight: 700;
+}
+.close-todo-details-btn {
+  position: absolute;
+  right: 1vw;
+  bottom: 1.5vh;
+}
+.todo-empty-currentobject-message {
+  font-size: 2vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+.notes {
+  display: flex;
+  flex-direction: column;
+  height: 25vh;
+  width: 100%;
+  background-color: #47bdad;
+  padding: 0.5vw;
+  border: 0.25vw black solid;
+}
+.note-title {
+  border: 2px red solid;
+  font-weight: 900;
+  font-family: lato, sans-serif;
+  font-size: 2.5vh;
+  color: #252525;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  height: 10vh;
+  align-content: center;
+}
+.note-description-body {
+  border: 2px red solid;
+  height: 100%;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+.note-description-text {
+  border: 2px red solid;
+  font-family: lato, sans-serif;
+  font-size: 2vh;
+  font-weight: 700;
+  color: #252525;
+  white-space: pre-wrap;
+}
+.note-buttons{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 2.5vh;
+  border: 2px red solid;
+}
+.view-note {
+  height: 2.5vh;
+  width: 2.5vw;
+  position: relative;
+  left: 6.75vw;
+}
+.delete-note {
+  height: 2.5vh;
+  width: 2.5vw;
+  position: relative;
+  left: 5.75vw;
+}
+.edit-note {
+  width: 30vw;
+  height: 50vh;
+  background-color: #dddddd;
+  z-index: 1; /* to avoid being blended in the background*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+.edit-note-header {
+  width: 100%;
+}
+.edit-note-panel {
+  height: 45vh;
+  width: 35vw;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 3.5%;
+}
+.edit-note-text-input {
+  width: 75%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.edit-note-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  height: 10vw;
+  padding: 2vh;
+}
+.note-confirm-edit-btn, .note-cancel-edit-btn {
+  border-radius: 15%;
+  font-size: 2vh;
+  background-color: #47bdad;
+  color: #dddddd;
+  font-weight: 900;
+  padding: 0.25%;
+  height: 75%;
+  width: 12.5%;
+  position: relative;
+}
+.note-confirm-edit-btn {
+  left: 13.5vw;
+}
+.note-cancel-edit-btn {
+  left: 5vw;
+}
+.note-edit-title {
+  height: 5vh;
+  font-weight: 700;
+}
+.note-edit-description {
+  height: 20vh;
+}

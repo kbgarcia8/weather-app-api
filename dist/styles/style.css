@@ -3,15 +3,15 @@ once understood */
 /*Fonts*/
 @font-face {
   font-family: Macqueen; 
-  src: url('fonts/Macqueen.ttf') format('truetype'); 
+  src: url('../fonts/Macqueen.ttf') format('truetype'); 
 }
 @font-face {
   font-family: Transistor; 
-  src: url('fonts/Transistor.ttf') format('truetype'); 
+  src: url('../fonts/Transistor.ttf') format('truetype'); 
 }
 @font-face {
   font-family: Coffeemood; 
-  src: url('fonts/Coffeemood.ttf') format('truetype'); 
+  src: url('../fonts/Coffeemood.ttf') format('truetype'); 
 }
 body {
     position: relative;
@@ -28,7 +28,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url("./images/background.svg");
+    background-image: url("../images/background.svg");
     background-size: cover;
     background-repeat: no-repeat;    
     opacity: 0.75;

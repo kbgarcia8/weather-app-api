@@ -23,13 +23,14 @@ module.exports = {
       metaDesc: 'TODO Webpage',
       template: './src/index.html',
       filename: 'index.html',
-      inject: 'head',
+      inject: 'body',
       scriptLoading: 'defer'
     }),
     new CopyPlugin({ //plug-in if dependencies are in a folder, downside is not in hash. Takes up space
       patterns: [
         { from: "src/images", to: "images" },
-        { from: "src/fonts", to: "fonts" }
+        { from: "src/fonts", to: "fonts" },
+        { from: "src/styles", to: "styles" }
       ],
       options: {
         concurrency: 100,

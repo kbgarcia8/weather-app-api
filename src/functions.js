@@ -1,11 +1,69 @@
 //variable declarations for dialog for creating new todo, project and note
 const dialogCreateNew = document.getElementById("create-task");
 const dialogPanel = document.querySelector(".create-new-panel");
+
 //variable declarations for main panel
 const mainPanel = document.querySelector(".workspace-panel");
+let mainPanelWindow = null;
+let activeProjectCategoryTab = null;
+const projectTabIsActivePattern = new RegExp("projects", 'i');
+
+
+//parse on local storage or create empty new mainTodos and notes
+const mainTodos = JSON.parse(localStorage.getItem('mainTodos')) || {
+  "today" : [],
+  "week" : [],
+  "overdue" : [],
+  "general" : []
+}
+
+//const projectTodos = JSON.parse(localStorage.getItem('projectTodos')) || [];
+const notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+//create a mock details if no object found on local storage
+if (!localStorage.getItem('mainTodos')) { 
+  //mainTodos.today.push(createMainTodo(inputtedTodoTitle, inputtedTodoDescription, inputtedTodoDueDate, inputtedTodoPriority, inputtedTodoStatus).mainTodoObject());
+  mainTodos.today.push(createMainTodo("House Chores", "Water the plants, clean the bathroom and make the bed", "2024-05-21", "LOW", false).mainTodoObject());
+  mainTodos.today.push(createMainTodo("Get Haircut", "", "2024-05-22", "MID", false).mainTodoObject());
+  mainTodos.today.push(createMainTodo("Javascript Self-Learning", "Continue project: To-do list production testing and incorporate bug fixes if needed", "2024-05-23", "HIGH", true).mainTodoObject());
+  
+  mainTodos.week.push(createMainTodo("Do Grocery", "Buy 2 canned tuna, 1 carton milk and 2kg chicken", "2024-05-19", "MID", false).mainTodoObject());
+  mainTodos.week.push(createMainTodo("Laundry", "Deliver laundry at 9AM then pickup at 5:30PM", "2024-07-05", "HIGH", true).mainTodoObject());
+  mainTodos.week.push(createMainTodo("Doctor's Appointment", "Go to dermatologist appointment, bring medical records", "2024-05-27", "LOW", false).mainTodoObject());
+
+  mainTodos["gym"] = [];
+  mainTodos.gym.push(createMainTodo("BB Grocery", "Buy Protein Shake at Shoppee", "2024-06-10", "HIGH", true).mainTodoObject());
+  mainTodos.gym.push(createMainTodo("Meal Prep", "Prepare meal prep for this week", "2024-07-02", "LOW", false).mainTodoObject());
+  mainTodos.gym.push(createMainTodo("Statistics Update", "Weigh in then update calorie intaks", "2024-06-15", "LOW", false).mainTodoObject());
+
+  mainTodos["work"] = [];
+  mainTodos.work.push(createMainTodo("Script", "Create script request of client for SEO", "2024-06-13", "HIGH", true).mainTodoObject());
+  mainTodos.work.push(createMainTodo("Ticket CleanUp", "Dobule check unresolved tickets from last week", "2024-06-21", "LOW", false).mainTodoObject());
+  mainTodos.work.push(createMainTodo("1-on-1", "1 on 1 discussion with Boss", "2024-06-18", "HIGH", false).mainTodoObject());
+
+  mainTodos["school"] = [];
+  mainTodos.school.push(createMainTodo("Lecture 1", "Finish Lecture 1 on Engr Management", "2024-06-25", "MID", true).mainTodoObject());
+  mainTodos.school.push(createMainTodo("Thesis", "Prepare thesis title and chapter 1-3", "2024-06-22", "HIGH", false).mainTodoObject());
+  mainTodos.school.push(createMainTodo("Add Course", "Add 3 more units to next sem target courses", "2024-06-27", "HIGH", false).mainTodoObject());
+}
+
+if(!localStorage.getItem('notes')) {
+  notes.push(createNote("Leave Balance", "Current Spend:\n2 VL, 4 FB, 0 SL\n0 BL").mainNoteObject());
+  notes.push(createNote("Country Wishlist", "Japan\nVietnam\nTaiwan").mainNoteObject());
+  notes.push(createNote("Local Travel Wishlist", "La Union\nVigan\nSiargao\nPuerto Princesa\nBoracay\nBaguio\nCamSur").mainNoteObject());
+  notes.push(createNote("2025 Goals", "Take the boards\nGo for a 6-digits job\nBuy more sneakers").mainNoteObject());
+  notes.push(createNote("Macros", "160g Protein\n237g Carbs\n31g Fat\n1900 calories").mainNoteObject());
+  notes.push(createNote("Work Notes", "Cultural Training - July1\nSubmit doc for performance review - July 3\nTalent Review - September").mainNoteObject());
+  notes.push(createNote("Leave Balance Copy", "Current Spend:\n2 VL, 4 FB, 0 SL\n0 BL").mainNoteObject());
+  notes.push(createNote("Country Wishlist Copy", "Japan\nVietnam\nTaiwan").mainNoteObject());
+  notes.push(createNote("Local Travel Wishlist Copy", "La Union\nVigan\nSiargao\nPuerto Princesa\nBoracay\nBaguio\nCamSur").mainNoteObject());
+  notes.push(createNote("2025 Goals Copy", "Take the boards\nGo for a 6-digits job\nBuy more sneakers").mainNoteObject());
+  notes.push(createNote("Macros Copy", "160g Protein\n237g Carbs\n31g Fat\n1900 calories").mainNoteObject());
+  notes.push(createNote("Work Notes Copy", "Cultural Training - July1\nSubmit doc for performance review - July 3\nTalent Review - September").mainNoteObject());
+}
 
 /*-----Main Panel Render Class-----*/
-class mainPanelRender {
+export class mainPanelRender {
   homeSummary (mainTodos, notes) {
     
     const childNodes = mainPanel.childNodes;
@@ -73,8 +131,9 @@ class mainPanelRender {
     mainPanel.setAttribute('style', 'padding: 2vh; display: grid; grid-template-columns: repeat(4, 22.5%); column-gap: 2.5%;');
   }
 }
+const mainPanelOpen = new mainPanelRender();
 //function to push created and processed item to mainTodos object/task
-function createMainTodo(title, description, date, priority,status) {
+export function createMainTodo(title, description, date, priority,status) {
   return {
     title: title,
     description: description,
@@ -94,7 +153,7 @@ function createMainTodo(title, description, date, priority,status) {
   };
 }
 //function to display todo catalogs
-function displayTodoCatalogEntry (index, title, date, category, description, priority, status) {
+export function displayTodoCatalogEntry (index, title, date, category, description, priority, status) {
   //console.log(title);
   var todo_entry_node_2 = document.createElement('DIV');
   todo_entry_node_2.setAttribute('class', 'todo-catalog');
@@ -378,13 +437,13 @@ function displayTodoCatalogEntry (index, title, date, category, description, pri
   edit_todo_entry_node_11.appendChild(edit_todo_entry_node_27);
 }
 //function to render todo catalogs, add eventlistener to open/close details dialog, delete entry and check if textbox is toggled
-function renderTodos (activeTab, mainTodos) {
+export function renderTodos (activeTab, mainTodos) {
   if (activeTab != "MY HOME" && activeTab != "MY NOTES") {
     sortTodo (mainTodos);
     //For use to loop through keys of mainTodos => categories
     const todoCategories = Object.keys(mainTodos);
     //console.log(todoCategories);
-    for (todoCategory of todoCategories) {
+    for (let todoCategory of todoCategories) {
       //console.log(todoCategory);
       const todoCategoryPattern = new RegExp(todoCategory, 'i');
       if (activeTab.match(todoCategoryPattern)) {
@@ -421,13 +480,13 @@ function renderTodos (activeTab, mainTodos) {
   }
 }
 //create addtional tab at the navigation bar with respect to available keys on mainTodos object and add eventlistener to each tab and whenever there is a new one
-function createProjectTab (mainTodos) {
+export function createProjectTab (mainTodos) {
   const projectTab = document.querySelector('.projects');
   const projectTabChilren = projectTab.childNodes;
   const dontMatchEmpty = new RegExp("\\n");
   const displayedProjectTabs =[];
   //Check all project tab category displayed on projectsTab
-  for (projectTabChild of projectTabChilren) {
+  for ( let projectTabChild of projectTabChilren) {
     //needed to unmatch newlines due to childNodes include #text -> new lines on HTML
     if (!projectTabChild.textContent.match(dontMatchEmpty)) {
       displayedProjectTabs.push(projectTabChild.textContent.toLowerCase());
@@ -436,7 +495,7 @@ function createProjectTab (mainTodos) {
   //console.log(displayedProjectTabs);
   //For use to loop through keys of mainTodos => categories
   const todoCategories = Object.keys(mainTodos);
-  for (todoCategory of todoCategories) {
+  for (let todoCategory of todoCategories) {
     if (!displayedProjectTabs.includes(`${todoCategory}`)) {
       //if current key in object is not yet displayed and excluding today and week
       if (todoCategory != "today" && todoCategory != "week" && todoCategory != "overdue" && todoCategory != "general") {
@@ -474,7 +533,7 @@ function createProjectTab (mainTodos) {
   });
 }
 //function to push created and processed item to notes object
-function createNote(title, description) {
+export function createNote(title, description) {
   return {
     title: title,
     description: description,
@@ -488,7 +547,7 @@ function createNote(title, description) {
   };
 }
 //function to display note catalogs
-function displayNoteCatalogEntry (index, title, description) {
+export function displayNoteCatalogEntry (index, title, description) {
   var note_entry_node_1 = document.createElement('DIV');
   note_entry_node_1.setAttribute('class', 'notes');
   note_entry_node_1.setAttribute('id', `note-entry${index}`);
@@ -596,7 +655,7 @@ function displayNoteCatalogEntry (index, title, description) {
   note_entry_dialog_node_11.appendChild(note_entry_dialog_node_13);
 }
 //function to render note catalogs, add eventlistener to open/close details dialog, delete entry, edit entry and check if textbox is toggled
-function renderNotes (activeTab, notes) {
+export function renderNotes (activeTab, notes) {
   if (activeTab == "MY NOTES") {
     if (notes.length == 0) {
       var mainpanel_note_node = document.createElement('SPAN');
@@ -621,7 +680,7 @@ function renderNotes (activeTab, notes) {
 
 /*-----Dialog Popup Render Class-----*/
 //pop-up dialog
-class dialogPopupRender {
+export class dialogPopupRender {
   renderCreateTodoDialog () {
     const childNodes = dialogPanel.childNodes;
 
@@ -828,15 +887,15 @@ class dialogPopupRender {
     dialogPanel.appendChild(dialog_note_node_7);
   }
 }
-
+const dialogPopupOpen = new dialogPopupRender();
 /*-----Event Listener Functions-----*/
 /*---For Dialog Popup inputs---*/
-function cancelAdd(e) {
+export function cancelAdd(e) {
   console.log("Adding canceled");
   e.preventDefault();
   dialogCreateNew.close();
 }
-function submitTodo(e) {
+export function submitTodo(e) {
   e.preventDefault(); // Prevent the default form submission behavior
   const inputtedTodoTitle = document.getElementById("edit-new-todo-title").value;
   const inputtedTodoDescription = document.getElementById("edit-new-todo-description").value;
@@ -862,7 +921,7 @@ function submitTodo(e) {
     renderTodos (activeProjectCategoryTab, mainTodos);
   }
 }
-function submitProject(e) {
+export function submitProject(e) {
   e.preventDefault(); // Prevent the default form submission behavior
   const inputtedProjetTitle = document.getElementById("edit-new-project-title").value;
   console.log(inputtedProjetTitle);
@@ -876,7 +935,7 @@ function submitProject(e) {
     createProjectTab (mainTodos);
   }
 }
-function submitNote (e) {
+export function submitNote (e) {
   e.preventDefault(); // Prevent the default form submission behavior
   const inputtedNoteTitle = document.getElementById("edit-new-note-title").value;
   const inputtedNoteDescription = document.getElementById("edit-new-note-description").value;
@@ -908,7 +967,7 @@ function submitNote (e) {
   dialogCreateNew.close();
 }
 /*---For Todo Catalogs---*/
-function submitEditTodo(e, index, currentTodoObject) {
+export function submitEditTodo(e, index, currentTodoObject) {
   const dialogEditTodo = document.querySelector(`#edit-todo-entry${index}`);
   e.preventDefault(); // Prevent the default form submission behavior
   const modifiedTodoTitle = document.getElementById(`edit-todo-entry${index}-title`).value;
@@ -959,7 +1018,7 @@ function submitEditTodo(e, index, currentTodoObject) {
   dialogEditTodo.close();
 }
 //todo entry details dialog open with eventlistener
-function openTodoDetails () {
+export function openTodoDetails () {
   const showTodoDetailsBtns = document.querySelectorAll('.todo-catalog-view-details-btn');
   showTodoDetailsBtns.forEach(function(showTodoDetailsBtn, index) {
     const dialogTodoDetails = document.querySelector(`#todo-entry${index}-details`);
@@ -970,7 +1029,7 @@ function openTodoDetails () {
   });
 }
 //todo entry details dialog close with eventlistener
-function closeTodoDetails () {
+export function closeTodoDetails () {
   const closeTodoDetailsBtns = document.querySelectorAll('.close-todo-details-btn');
   closeTodoDetailsBtns.forEach(function(closeTodoDetailsBtn, index) {
     const dialogTodoDetails = document.querySelector(`#todo-entry${index}-details`);
@@ -981,7 +1040,7 @@ function closeTodoDetails () {
   });
 }
 //Change class if checkbox is toggled
-function checkboxChecker (currentTodoObject) {
+export function checkboxChecker (currentTodoObject) {
   const todoEntryCheckBoxes = document.querySelectorAll("input[type=checkbox]");
         //console.log(todoEntryCheckBoxes);
   todoEntryCheckBoxes.forEach(function (todoEntryCheckBox, index) {
@@ -1059,7 +1118,7 @@ function checkboxChecker (currentTodoObject) {
   
 }
 //todo entry delete catalog button
-function deleteTodoCatalog (currentTodoObject) {
+export function deleteTodoCatalog (currentTodoObject) {
   const deleteTodoBtns = document.querySelectorAll('.todo-entry-delete-button');
   deleteTodoBtns.forEach(function(deleteTodoBtn, index) {
     deleteTodoBtn.addEventListener("click", function(e) {
@@ -1116,7 +1175,7 @@ function deleteTodoCatalog (currentTodoObject) {
   });
 }
 //edit todo entry popup open 
-function openEditTodoDetails () {
+export function openEditTodoDetails () {
   const editTodoBtns = document.querySelectorAll('.todo-entry-edit-button');
   editTodoBtns.forEach(function(editTodoBtn, index) {
     const dialogEditTodo = document.querySelector(`#edit-todo-entry${index}`);
@@ -1130,7 +1189,7 @@ function openEditTodoDetails () {
   });
 }
 //todo edit form submit
-function submitEditTodoForm (currentTodoObject) {
+export function submitEditTodoForm (currentTodoObject) {
   const EditTodoForms = document.querySelectorAll('.edit-todo-popup-form');
   EditTodoForms.forEach(function(EditTodoForm, index) {
     //console.log(EditTodoForm);
@@ -1139,7 +1198,7 @@ function submitEditTodoForm (currentTodoObject) {
   });
 }
 //edit todo entry popup close
-function closeEditTodoDetails () {
+export function closeEditTodoDetails () {
   const closeEditBtns = document.querySelectorAll('#cancel-edit-todo');
   closeEditBtns.forEach(function(closeEditBtn, index) {
     const dialogEditTodo = document.querySelector(`#edit-todo-entry${index}`);
@@ -1151,7 +1210,7 @@ function closeEditTodoDetails () {
 }
 /*---Note Catalogs---*/
 //submit edit note form
-function submitEditNote(e, index, notes) {
+export function submitEditNote(e, index, notes) {
   const dialogViewOrEditNote = document.querySelector(`#edit-note-entry${index}`);
   e.preventDefault(); // Prevent the default form submission behavior
   const modifiedNoteTitle = document.getElementById(`edit-note-entry${index}-title`).value;
@@ -1187,7 +1246,7 @@ function submitEditNote(e, index, notes) {
   dialogViewOrEditNote.close();
 }
 //view and/or edit note catalog entry
-function viewOrEditNoteDetails () {
+export function viewOrEditNoteDetails () {
   const viewOrEditNoteBtns = document.querySelectorAll('.view-note');
   viewOrEditNoteBtns.forEach(function(viewOrEditNoteBtn, index) {
     const dialogViewOrEditNote = document.querySelector(`#edit-note-entry${index}`);
@@ -1199,7 +1258,7 @@ function viewOrEditNoteDetails () {
   });
 }
 //close view/cancel edit note catalog entry
-function closeNoteDetails () {
+export function closeNoteDetails () {
   const closeViewNoteBtns = document.querySelectorAll('.note-cancel-edit-btn');
   closeViewNoteBtns.forEach(function(closeViewNoteBtn, index) {
     const dialogViewOrEditNote = document.querySelector(`#edit-note-entry${index}`);
@@ -1211,7 +1270,7 @@ function closeNoteDetails () {
   });
 }
 //delete note entry
-function deleteNoteCatalog (notes) {
+export function deleteNoteCatalog (notes) {
   const deleteNoteBtns = document.querySelectorAll('.delete-note');
   deleteNoteBtns.forEach(function(deleteNoteBtn, index) {
     deleteNoteBtn.addEventListener("click", function(e) {
@@ -1261,7 +1320,7 @@ function deleteNoteCatalog (notes) {
   });
 }
 //note edit form submit
-function submitEditNoteForm (notes) {
+export function submitEditNoteForm (notes) {
   const EditNoteForms = document.querySelectorAll('.edit-note-popup-form');
   EditNoteForms.forEach(function(EditNoteForm, index) {
     //console.log(EditTodoForm);
@@ -1271,7 +1330,7 @@ function submitEditNoteForm (notes) {
 }
 /*---Date Sorting/Format Functions---*/
 //check dates for current week
-function checkDatesInThisWeek() {
+export function checkDatesInThisWeek() {
   const dateObject = new Date();
   const dateToday = dateObject.getDate();
   const dayToday = dateObject.getDay();
@@ -1290,14 +1349,14 @@ function checkDatesInThisWeek() {
   return datesOfTheWeek;
 }
 //format date as YYYY-MM-DD
-function formatDateYYYYMMDD(date) {
+export function formatDateYYYYMMDD(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
 //get date from string
-function getDateFromString(extractedDate) {
+export function getDateFromString(extractedDate) {
   // Split the string into parts
   const [year, month, day] = extractedDate.split('-').map(Number);
   
@@ -1307,7 +1366,7 @@ function getDateFromString(extractedDate) {
 
 /*-----Summary/Sorting Functions*/
 //to submit on the right key depending on what is the current active tab when the create button was clicked
-function sortToCategory (mainTodos, extractedTodoInput, currentMainPanelWindow) {
+export function sortToCategory (mainTodos, extractedTodoInput, currentMainPanelWindow) {
   //For use to loop through keys of mainTodos => categories
   const todoCategories = Object.keys(mainTodos);
   for (todoCategory of todoCategories) {
@@ -1323,7 +1382,7 @@ function sortToCategory (mainTodos, extractedTodoInput, currentMainPanelWindow) 
   }
 }
 //sort todo entries
-function sortTodo (mainTodos) {
+export function sortTodo (mainTodos) {
   const projects = Object.keys(mainTodos); //keys of mainTodos->projects
   const today = new Date();
   const thisWeekDatesFormatted = []; //to get days of this week
@@ -1382,7 +1441,7 @@ function sortTodo (mainTodos) {
     localStorage.setItem("mainTodos", JSON.stringify(mainTodos));
 }
 //calculate total notes and todo entries
-function calcSummary (mainTodos, notes) {
+export function calcSummary (mainTodos, notes) {
   const projects = Object.keys(mainTodos); //keys of mainTodos->projects
   const today = new Date();
   const totalProjects = projects.length-3; //total projects excluding overdue, today and week keys
@@ -1430,38 +1489,4 @@ function calcSummary (mainTodos, notes) {
     "totalProjects": totalProjects,
     "totalNotes": totalNotes
   }
-}
-
-module.exports = {
-  mainPanelRender,
-  dialogPopupRender,
-  createMainTodo,
-  displayTodoCatalogEntry,
-  renderTodos,
-  createProjectTab,
-  createNote,
-  displayNoteCatalogEntry,
-  renderNotes,
-  cancelAdd,
-  submitTodo,
-  submitProject,
-  submitNote,
-  submitEditTodo,
-  openTodoDetails,
-  closeTodoDetails,
-  checkboxChecker,
-  deleteTodoCatalog,
-  openEditTodoDetails,
-  submitEditTodoForm,
-  closeEditTodoDetails,
-  submitEditNote,
-  viewOrEditNoteDetails,
-  closeNoteDetails,
-  deleteNoteCatalog,
-  submitEditNoteForm,
-  checkDatesInThisWeek,
-  formatDateYYYYMMDD,
-  getDateFromString,
-  sortToCategory,
-  sortTodo,calcSummary
 }
