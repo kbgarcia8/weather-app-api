@@ -10,6 +10,8 @@ module.exports = {
     },
     compress: true,
     port: 9000,
+    contentBase: './dist',
+    open: true
   },
   entry: './src/index.js',
   watch: true,
