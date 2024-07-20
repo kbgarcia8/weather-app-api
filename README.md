@@ -1,29 +1,23 @@
-# Dynamic UI Demos
-Example of dropdowns and Image Carousel that can be used as template whenever needed
+# Weather App API
+Basic Weather App using Visual Crossing’s API
 ### Type: Learning
 ### Title: Dropdown Menu and Image Carousel
-### Start Date: 07/08/2024
-### Target Date: 07/15/2024
-### Finish Date: 07/12/2024
+### Start Date: 07/20/2024
+### Target Date: 07/21/2024
+### Finish Date: 07//2024
 
 #### Live Demo: 
 
 #### Description: 
-Types of dropdown in this demo:
-    - Classic dropdown with options [click and hover]
-    - Expand down Dropdown
-    - Side Drawer Dropdown (Curtain Menu)
-    - Image Carousel [default style slide from left to right]
+The user will provide a name of a country, city or place
+
+Knowledge of asynchronous code, API fetch, async and await are utilizes in this project
+### <u>Action Tracker</u>
+1. Form Validation using JS
+2. API Data Fetch Test
+    - Extract data needed
+    - Display data on HTML elements
+3. Dynamic API Link Fetch
 
 ### <u>For Improvement</u>
-1. Transform creation of dropdowns into functions/modules
-    - Arguments taken
-        - Class name for button that will trigger the dropdown and container of content
-        - Variable of parent to append to
-        - Object containing "option_name": href as elements
-    - Click Dropdown: Done
-    - Hover Dropdown: Done
-    - Slide side Curtain Menu: Done
-    - Image Carousel: Done
-2. Deploy to Github Pages: Done
-3. Make a package at NPM
+1. 
