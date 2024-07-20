@@ -14,8 +14,8 @@
       <div class="form-container-header">
         <h1>Weather App</h1>
       </div>
-      <form action="" id="main-form" novalidate>
-        <input class="main-form-input" name="input-place" required placeholder="Country or City"></input>
+      <form action="" id="main-form">
+        <input class="main-form-input" type="text" name="input-place" pattern="^[A-Za-z0-9'\-\s]*" required placeholder="Country or City"></input>
         <button class="submit-input" id="submit-place" type="submit" value="default">
           <p>Get Weather</p>
         </button>
