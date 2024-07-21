@@ -3,7 +3,7 @@ Basic Weather App using Visual Crossing’s API
 ### Type: Learning
 ### Title: Dropdown Menu and Image Carousel
 ### Start Date: 07/20/2024
-### Target Date: 07/21/2024
+### Target Date: 07/24/2024
 ### Finish Date: 07//2024
 
 #### Live Demo: 
@@ -14,6 +14,8 @@ The user will provide a name of a country, city or place
 Knowledge of asynchronous code, API fetch, async and await are utilizes in this project
 ### <u>Action Tracker</u>
 1. Form Validation using JS
+    - <s>accept alphanumeric, spaces, aposthrope and hypen pattern only</s>
+    - style in  valid and valid input borders
 2. API Data Fetch Test
     - Extract data needed
     - Display data on HTML elements

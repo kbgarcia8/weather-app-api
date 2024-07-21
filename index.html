@@ -15,13 +15,15 @@
         <h1>Weather App</h1>
       </div>
       <form action="" id="main-form">
-        <input class="main-form-input" type="text" name="input-place" pattern="^[A-Za-z0-9'\-\s]*" required placeholder="Country or City"></input>
+        <input class="main-form-input" type="text" name="input-place" pattern="^[A-Za-z0-9'\-\s]*" placeholder="Country or City" minlength="4" maxlength="56" required></input>
         <button class="submit-input" id="submit-place" type="submit" value="default">
           <p>Get Weather</p>
         </button>
       </form>
     </div>
-    <div class="weather-info-space"></div>
+    <div class="weather-info-space">
+      <img src="" alt="" id="weather-icon">
+    </div>
     <!--<script src="./functions.js"></script>--> 
     <script src="./index.js"></script>   
   </body>

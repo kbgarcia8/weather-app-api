@@ -1,0 +1,7 @@
+Keywords for conditions: (will be based in response['currentConditions'].icon)
+1. Clear (sunny)
+2. Cloudy (partly) - day/night
+3. Overcast - too cloudy/fog
+4. rain
+
+What to put in div
