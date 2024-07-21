@@ -9,6 +9,8 @@ const urlExtension2 = "&contentType=json";
 const inputPlace = document.querySelector(".main-form-input");
 const inputForm = document.querySelector("#main-form");
 
+const weatherInfoDiv = document.querySelector(".weather-info-space");
+
 //eventlistener to prompt error when inputting
 inputPlace.addEventListener('input', function (e) {
 
@@ -66,6 +68,7 @@ async function getRawWeatherData(location) {
             throw new Error(`HTTP error! Status: ${response.status}`);
             //Create an error function to log status from HTTP response
         } else {
+            weatherInfoDiv.setAttribute('style', 'display: flex');
             const parseResponse = await response.json().then(data => {
                 /* need to use .then function to process the response instead of only pending
                 in this function you must also parse the JSON and equate it to what data are needed*/
@@ -79,3 +82,6 @@ async function getRawWeatherData(location) {
 }
 
 //function to display information
+function displayWeatherInfo() {
+    
+}
