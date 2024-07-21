@@ -72,7 +72,8 @@ async function getRawWeatherData(location) {
             const parseResponse = await response.json().then(data => {
                 /* need to use .then function to process the response instead of only pending
                 in this function you must also parse the JSON and equate it to what data are needed*/
-                console.log(data['currentConditions'].icon);
+                //console.log(data['currentConditions'].icon);
+                console.log(data);
                 //continue here to call the function to display all data on weather info space div
             });
         }
@@ -83,5 +84,5 @@ async function getRawWeatherData(location) {
 
 //function to display information
 function displayWeatherInfo() {
-    
+
 }
