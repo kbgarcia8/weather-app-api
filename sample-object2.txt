@@ -38,3 +38,37 @@ Sample Data
 7. 
 8. 
 9. 
+
+<h2>Muntinlupa</h2>
+      <span class="temperature">29.4 °C</span>
+      <span class="date-and-time">Jul 21 2024 03:17:00 PM</span>
+      <div class="condition-and-humidity">
+        <div class="condition">
+          <img src="./images/static/rainy-6.svg" alt="weather-icon" class="weather-condition-icon">
+          <span class="condition-text">Overcast</span>
+        </div>
+        <div class="humidity">
+          <img src="./images/humidity-svgrepo-com.svg" alt="humidity-icon" class="humidity-condition-icon">
+          <span class="humidity-text">79.8%</span>
+        </div>
+      </div>
+      <div class="sunrise-and-sunset">
+        <div class="sunrise">
+          <img src="./images/sunrise-svgrepo-com.svg" alt="sunrise-icon" class="sunrise-condition-icon">
+          <span class="sunrise-text">05:36:41 AM</span>
+        </div>
+        <div class="sunset">
+          <img src="./images/sunset-svgrepo-com.svg" alt="sunset-icon" class="sunset-condition-icon">
+          <span class="sunset-text">06:27:53 PM</span>
+        </div>
+      </div>
+      <div class="windspeed-and-visibility">
+        <div class="windspeed">
+          <img src="./images/wind-svgrepo-com.svg" alt="windspeed-icon" class="windspeed-condition-icon">
+          <span class="windspeed-text">11.7 KM/H</span>
+        </div>
+        <div class="visibility">
+          <img src="./images/visibility-show-svgrepo-com.svg" alt="visibility-icon" class="visibility-condition-icon">
+          <span class="visibility-text">10 KM</span>
+        </div>
+      </div>
