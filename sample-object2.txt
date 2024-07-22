@@ -1,5 +1,5 @@
 Keywords for conditions relative to picture:
-(will be based in response['currentConditions'].icon)
+(will be based in response['currentConditions'].conditions)
 1. Clear (sunny)
 2. Clear-night
 3. Cloudy (partly) - day/night
@@ -27,3 +27,14 @@ Convert to 12HR-Time
 data['currentConditions']['windspeed'] in km
 9. Visibility 
 data['currentConditions']['visibility'] in km
+
+Sample Data
+1. Muntinlupa, National Capital Region, Philippines
+2. 
+3. 
+4. 
+5. 
+6. 
+7. 
+8. 
+9. 
