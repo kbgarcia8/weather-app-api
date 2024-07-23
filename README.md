@@ -25,3 +25,4 @@ Knowledge of asynchronous code, API fetch, async and await are utilizes in this 
 1. For webpack bundle and deploy to Github Pages
 2. Display weather for the next 7 days
 3. Add Highest and Lowest Temp for the next 7 days
+4. API used can be improved. Visual Crossing API current time is delayed 20+ mins
