@@ -64,12 +64,12 @@ inputForm.addEventListener('submit', function (e) {
 async function getRawWeatherData(location) {
     try {
         const response = await fetch(`${weatherAPI.url}${location}${urlExtension1}${weatherAPI.key}${urlExtension2}`, {mode: 'cors'});
-        
+        weatherInfoDiv.setAttribute('style', 'display: flex');
         if(!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
             //Create an error function to log status from HTTP response
         } else {
-            weatherInfoDiv.setAttribute('style', 'display: flex');
+            
             body.classList.add('body-adjust');
             const parseResponse = await response.json().then(data => {
                 /* need to use .then function to process the response instead of only pending
@@ -146,6 +146,8 @@ function displayWeatherInfo(weatherInfoDiv, place, temperature, date, currentTim
         weather_info_node_10.setAttribute('src', './images/static/cloudy-day-3.svg');
     } else if (icon == "partly-cloudy-night") {
         weather_info_node_10.setAttribute('src', './images/static/cloudy-night-3.svg');
+    } else if (icon == "cloudy") {
+        weather_info_node_10.setAttribute('src', './images/static/cloudy.svg');
     } else if (icon == "snow") {
         weather_info_node_10.setAttribute('src', './images/static/snowy-5.svg');
     } else if (icon == "thunder" || icon == "storm") {
